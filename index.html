@@ -52,14 +52,15 @@
     <header class="bg-white shadow-sm sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <!-- Logo công ty (Lưu ý: Tên file trên GitHub phải chính xác là LOGO.png) -->
-                <img src="LOGO.png" alt="Logo Capy Global" class="h-12 w-auto object-contain" onerror="this.outerHTML='<div class=\'w-12 h-12 flex items-center justify-center bg-green-600 rounded-xl text-white font-black text-[10px] text-center leading-tight shadow-md\'>CAPY<br>GLOBAL</div>'">
+                <!-- Logo công ty (Gọi file LOGO.png đã up lên GitHub của bạn) -->
+                <img src="LOGO.png" alt="Logo Capy Global" class="h-12 w-auto object-contain">
                 <div>
                     <h1 class="text-xl font-extrabold text-gray-900 tracking-tight uppercase">Capy Global</h1>
                     <p class="text-sm text-green-600 font-medium">Hệ thống Quản lý Nhà vườn</p>
                 </div>
             </div>
             
+            <!-- Khu vực tìm kiếm (Desktop) -->
             <div class="hidden md:flex relative w-96">
                 <input type="text" id="searchInput" onkeyup="searchCustomer()" placeholder="Tìm kiếm tên, SĐT khách hàng..." class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow text-sm">
                 <i class="fas fa-search absolute left-3.5 top-3 text-gray-400"></i>
@@ -67,6 +68,7 @@
         </div>
     </header>
 
+    <!-- Khu vực tìm kiếm (Mobile) -->
     <div class="md:hidden px-4 py-3 bg-white border-b border-gray-200 sticky top-20 z-10">
         <div class="relative w-full">
             <input type="text" id="searchInputMobile" onkeyup="searchCustomer(true)" placeholder="Tìm kiếm tên, SĐT..." class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm">
@@ -75,13 +77,16 @@
     </div>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Trạng thái Đang tải -->
         <div id="loadingIndicator" class="flex flex-col items-center justify-center py-20">
             <i class="fas fa-spinner fa-spin text-4xl text-green-600 mb-4"></i>
             <p class="text-gray-500 font-medium animate-pulse">Đang đồng bộ dữ liệu mới nhất từ Google Sheets...</p>
         </div>
 
+        <!-- Lưới danh sách Khách hàng -->
         <div id="customerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden"></div>
         
+        <!-- Hiển thị khi không tìm thấy -->
         <div id="noResult" class="hidden flex-col items-center justify-center py-20 text-center">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                 <i class="fas fa-search text-2xl text-gray-400"></i>
@@ -91,7 +96,7 @@
         </div>
     </main>
 
-    <!-- Modal Chi tiết Khách hàng & Mã QR (Thiết kế mới mở rộng) -->
+    <!-- Modal Chi tiết Khách hàng & Mã QR đầy đủ thông tin -->
     <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm modal-overlay" onclick="closeModal()"></div>
         
@@ -198,7 +203,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -215,7 +219,7 @@
         let currentProfileLink = "";
         let currentQRName = "";
 
-        // Trích xuất toàn bộ 15 cột dữ liệu từ Google Sheets
+        // Trích xuất dữ liệu tự động từ Google Sheets qua phương thức JSONP công nghệ mới
         function handleGoogleSheetResponse(response) {
             document.getElementById('loadingIndicator').classList.add('hidden');
             
@@ -237,11 +241,11 @@
                             crop: row.c[8]?.v || "--",                 // Cột I: Giống
                             age: row.c[9]?.v || "--",                  // Cột J: Tuổi cây
                             water: row.c[10]?.v || "--",               // Cột K: Hệ thống tưới
-                            waterSource: row.c[11]?.v || "--",         // Cột L: Nguồn tưới (MỚI)
-                            farmingMethod: row.c[12]?.v || "--",       // Cột M: Hình thức canh tác (MỚI)
-                            cadmiumTest: row.c[13]?.v || "Chưa có",    // Cột N: Kiểm nghiệm Cadimi (MỚI)
-                            buyer: row.c[14]?.v || "Chưa có",          // Cột O: Đơn vị thu mua (MỚI)
-                            fertilizer: row.c[15]?.v || "--"           // Cột P: Phân bón chính (MỚI)
+                            waterSource: row.c[11]?.v || "--",         // Cột L: Nguồn tưới
+                            farmingMethod: row.c[12]?.v || "--",       // Cột M: Hình thức canh tác
+                            cadmiumTest: row.c[13]?.v || "Chưa có",    // Cột N: Kiểm nghiệm Cadimi
+                            buyer: row.c[14]?.v || "Chưa có",          // Cột O: Đơn vị thu mua
+                            fertilizer: row.c[15]?.v || "--"           // Cột P: Phân bón chính
                         });
                     }
                 });
@@ -262,7 +266,7 @@
         script.src = 'https://docs.google.com/spreadsheets/d/1nV3tvjWThiN0izaTuzNR19PRqu9qTjflEFggkYNDA18/gviz/tq?tqx=responseHandler:handleGoogleSheetResponse&headers=1';
         document.body.appendChild(script);
 
-        // Hiển thị danh sách thẻ ngoài trang chủ
+        // Hiển thị danh sách thẻ ra màn hình chính
         function renderCards(data) {
             const grid = document.getElementById('customerGrid');
             grid.innerHTML = '';
@@ -318,7 +322,7 @@
             });
         }
 
-        // Kiểm tra Deep Link để tự động mở thẻ
+        // Kiểm tra Deep Link để tự động bật mở modal khách hàng khi quét QR
         function checkAndOpenDeepLink() {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('user');
@@ -332,7 +336,7 @@
             }
         }
 
-        // Đổ toàn bộ dữ liệu vào Modal
+        // Đổ dữ liệu vào Modal chi tiết
         function openModal(customerId) {
             const customer = allCustomers.find(c => c.id === customerId);
             if(!customer) return;
@@ -348,13 +352,13 @@
             document.getElementById('modal-crop').innerText = customer.crop;
             document.getElementById('modal-age').innerText = customer.age;
 
-            // Khu 2: Kỹ thuật & Phân bón (MỚI)
+            // Khu 2: Kỹ thuật & Phân bón
             document.getElementById('modal-water').innerText = customer.water;
             document.getElementById('modal-water-source').innerText = customer.waterSource;
             document.getElementById('modal-farming-method').innerText = customer.farmingMethod;
             document.getElementById('modal-fertilizer').innerText = customer.fertilizer;
 
-            // Khu 3: Kiểm nghiệm & Đầu ra (MỚI)
+            // Khu 3: Kiểm nghiệm & Đầu ra
             document.getElementById('modal-cadmium').innerText = customer.cadmiumTest;
             document.getElementById('modal-buyer').innerText = customer.buyer;
 
@@ -363,7 +367,7 @@
             const identifier = customer.phone || customer.name; 
             currentProfileLink = `${baseUrl}?user=${encodeURIComponent(identifier)}`;
 
-            // Vẽ QR Code
+            // Khởi tạo QR Code chứa Deep Link
             const qrContainer = document.getElementById('qrcode-container');
             qrContainer.innerHTML = ''; 
             
