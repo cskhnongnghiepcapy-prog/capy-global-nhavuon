@@ -314,7 +314,7 @@
             currentQRName = customer.name;
 
             // TẠO LINK CHUẨN ĐỂ NHÚNG VÀO QR (Gán cố định tên miền để không bị lỗi rỗng)
-            const baseUrl = 'https://capyglobal.vn'; 
+            const baseUrl = '[https://nhavuoncapy.vercel.app'; 
             const identifier = customer.phone || customer.name; 
             currentProfileLink = `${baseUrl}?user=${encodeURIComponent(identifier)}`;
 
