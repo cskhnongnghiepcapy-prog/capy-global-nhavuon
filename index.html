@@ -207,8 +207,8 @@
                         allCustomers.push({
                             id: index, // Tạo ID dựa trên số thứ tự dòng
                             name: row.c[1]?.v || "Không rõ",           // Cột B: Họ tên
-                            dob: row.c[2]?.f || row.c[2]?.v || "--",   // Cột C: Ngày tháng năm sinh (lấy format nếu có)
-                            phone: row.c[3]?.v ? String(row.c[3].v) : "", // Cột D: Số điện thoại
+                            dob: row.c[2]?.f || row.c[2]?.v || "--",   // Cột C: Ngày tháng năm sinh
+                            phone: row.c[3]?.v ? String(row.c[3].v).trim() : "", // Cột D: Số điện thoại
                             addressRes: row.c[4]?.v || "",             // Cột E: Địa chỉ thường trú
                             addressGar: row.c[5]?.v || "",             // Cột F: Địa chỉ vườn
                             area: row.c[6]?.v || "",                   // Cột G: Diện tích
@@ -222,6 +222,8 @@
 
                 if (allCustomers.length > 0) {
                     renderCards(allCustomers);
+                    // KIỂM TRA LINK ĐỂ TỰ ĐỘNG MỞ HỒ SƠ (DEEP LINKING)
+                    checkAndOpenDeepLink();
                 } else {
                     document.getElementById('noResult').classList.remove('hidden');
                 }
@@ -237,7 +239,6 @@
 
         // Tạo thẻ kịch bản (Script) để lấy dữ liệu dạng JSONP vượt tường lửa CORS
         const script = document.createElement('script');
-        // ID trang tính của bạn
         script.src = 'https://docs.google.com/spreadsheets/d/1nV3tvjWThiN0izaTuzNR19PRqu9qTjflEFggkYNDA18/gviz/tq?tqx=responseHandler:handleGoogleSheetResponse&headers=1';
         document.body.appendChild(script);
 
@@ -261,7 +262,6 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-2xl p-5 border border-gray-100 card-hover flex flex-col h-full relative overflow-hidden';
                 
-                // Dải màu trang trí phía trên thẻ
                 card.innerHTML = `
                     <div class="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
                     <div class="flex items-start justify-between mb-4">
@@ -296,6 +296,24 @@
             });
         }
 
+        // TỰ ĐỘNG KIỂM TRA TRA LIÊN KẾT ĐỂ MỞ HỒ SƠ (DEEP LINKING)
+        function checkAndOpenDeepLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userParam = urlParams.get('user');
+
+            if (userParam) {
+                // Tìm khách hàng có SĐT hoặc Tên khớp với trên link
+                const matchedCustomer = allCustomers.find(c => 
+                    (c.phone && c.phone === userParam) || 
+                    (c.name && c.name.toLowerCase() === decodeURIComponent(userParam).toLowerCase())
+                );
+
+                if (matchedCustomer) {
+                    openModal(matchedCustomer.id);
+                }
+            }
+        }
+
         // Mở Modal và tạo QR
         function openModal(customerId) {
             const customer = allCustomers.find(c => c.id === customerId);
@@ -313,8 +331,8 @@
 
             currentQRName = customer.name;
 
-            // TẠO LINK CHUẨN ĐỂ NHÚNG VÀO QR (Gán cố định tên miền để không bị lỗi rỗng)
-            const baseUrl = '[https://nhavuoncapy.vercel.app'; 
+            // ĐÃ SỬA LỖI: Xoá ký tự "[" bị thừa ở link Vercel
+            const baseUrl = 'https://nhavuoncapy.vercel.app'; 
             const identifier = customer.phone || customer.name; 
             currentProfileLink = `${baseUrl}?user=${encodeURIComponent(identifier)}`;
 
