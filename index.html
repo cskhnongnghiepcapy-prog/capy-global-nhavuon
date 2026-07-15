@@ -19,16 +19,14 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Nền xám nhạt */
+            background-color: #f3f4f6;
         }
 
-        /* Tùy chỉnh thanh cuộn */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Hiệu ứng nổi cho thẻ khách hàng */
         .card-hover {
             transition: all 0.3s ease;
         }
@@ -37,14 +35,12 @@
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Animation cho modal */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
         .modal-overlay { animation: fadeIn 0.2s ease-out forwards; }
         .modal-content { animation: slideUp 0.3s ease-out forwards; }
 
-        /* Khung chứa QR */
         #qrcode-container img {
             margin: 0 auto;
             border-radius: 8px;
@@ -56,15 +52,14 @@
     <header class="bg-white shadow-sm sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3">
-               <!-- Logo công ty -->
-                <img src="logo.png" alt="Logo Capy Global" class="h-12 w-auto object-contain">
+                <!-- Logo công ty (Lưu ý: Tên file trên GitHub phải chính xác là LOGO.png) -->
+                <img src="LOGO.png" alt="Logo Capy Global" class="h-12 w-auto object-contain" onerror="this.outerHTML='<div class=\'w-12 h-12 flex items-center justify-center bg-green-600 rounded-xl text-white font-black text-[10px] text-center leading-tight shadow-md\'>CAPY<br>GLOBAL</div>'">
                 <div>
                     <h1 class="text-xl font-extrabold text-gray-900 tracking-tight uppercase">Capy Global</h1>
                     <p class="text-sm text-green-600 font-medium">Hệ thống Quản lý Nhà vườn</p>
                 </div>
             </div>
             
-            <!-- Khu vực tìm kiếm (Desktop) -->
             <div class="hidden md:flex relative w-96">
                 <input type="text" id="searchInput" onkeyup="searchCustomer()" placeholder="Tìm kiếm tên, SĐT khách hàng..." class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow text-sm">
                 <i class="fas fa-search absolute left-3.5 top-3 text-gray-400"></i>
@@ -72,7 +67,6 @@
         </div>
     </header>
 
-    <!-- Khu vực tìm kiếm (Mobile) -->
     <div class="md:hidden px-4 py-3 bg-white border-b border-gray-200 sticky top-20 z-10">
         <div class="relative w-full">
             <input type="text" id="searchInputMobile" onkeyup="searchCustomer(true)" placeholder="Tìm kiếm tên, SĐT..." class="w-full pl-10 pr-4 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm">
@@ -81,18 +75,13 @@
     </div>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <!-- Trạng thái Đang tải -->
         <div id="loadingIndicator" class="flex flex-col items-center justify-center py-20">
             <i class="fas fa-spinner fa-spin text-4xl text-green-600 mb-4"></i>
-            <p class="text-gray-500 font-medium animate-pulse">Đang đồng bộ dữ liệu từ Google Sheets...</p>
+            <p class="text-gray-500 font-medium animate-pulse">Đang đồng bộ dữ liệu mới nhất từ Google Sheets...</p>
         </div>
 
-        <!-- Lưới danh sách Khách hàng -->
-        <div id="customerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden">
-            <!-- Thẻ khách hàng sẽ được nhúng bằng JavaScript vào đây -->
-        </div>
+        <div id="customerGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 hidden"></div>
         
-        <!-- Hiển thị khi không tìm thấy -->
         <div id="noResult" class="hidden flex-col items-center justify-center py-20 text-center">
             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                 <i class="fas fa-search text-2xl text-gray-400"></i>
@@ -102,96 +91,131 @@
         </div>
     </main>
 
-    <!-- Modal Chi tiết Khách hàng & Mã QR -->
+    <!-- Modal Chi tiết Khách hàng & Mã QR (Thiết kế mới mở rộng) -->
     <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
-        <!-- Lớp phủ tối mờ -->
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm modal-overlay" onclick="closeModal()"></div>
         
-        <!-- Khung Modal -->
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto relative modal-content flex flex-col md:flex-row">
-            <!-- Nút đóng -->
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative modal-content flex flex-col md:flex-row">
             <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-800 transition-colors z-10">
                 <i class="fas fa-times"></i>
             </button>
 
             <!-- Cột trái: QR Code -->
-            <div class="md:w-2/5 bg-green-50/50 p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-green-100">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-green-100 mb-4">
-                    <div id="qrcode-container" class="w-44 h-44 flex items-center justify-center">
-                        <!-- QR Code được vẽ ở đây -->
-                    </div>
+            <div class="md:w-1/3 bg-green-50/50 p-6 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-green-100">
+                <div class="bg-white p-3 rounded-xl shadow-sm border border-green-100 mb-3">
+                    <div id="qrcode-container" class="w-44 h-44 flex items-center justify-center"></div>
                 </div>
-                <p class="text-xs font-semibold text-green-700 tracking-wider mb-6">QUÉT ĐỂ XEM HỒ SƠ</p>
+                <p class="text-xs font-semibold text-green-700 tracking-wider mb-5">QUÉT ĐỂ XEM HỒ SƠ</p>
                 
-                <div class="w-full space-y-3">
-                    <button onclick="downloadQR()" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center gap-2">
+                <div class="w-full space-y-2.5">
+                    <button onclick="downloadQR()" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center gap-2 text-sm">
                         <i class="fas fa-download"></i> Lưu Mã QR
                     </button>
-                    <button onclick="copyProfileLink()" class="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center gap-2">
+                    <button onclick="copyProfileLink()" class="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg font-medium transition-colors shadow-sm flex items-center justify-center gap-2 text-sm">
                         <i class="far fa-copy"></i> Sao chép Link
                     </button>
                 </div>
             </div>
 
-            <!-- Cột phải: Thông tin chi tiết -->
-            <div class="md:w-3/5 p-8">
-                <h2 id="modal-name" class="text-2xl font-bold text-gray-900 mb-1">Tên khách hàng</h2>
-                <div class="flex items-center text-green-600 font-semibold mb-6">
-                    <i class="fas fa-phone-alt mr-2"></i> <span id="modal-phone">SĐT</span>
-                </div>
-
-                <div class="space-y-5">
-                    <!-- Mục thông tin -->
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Địa chỉ vườn</p>
-                        <p id="modal-address" class="text-gray-800 font-medium">...</p>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Diện tích canh tác</p>
-                            <p id="modal-area" class="text-gray-800 font-medium">...</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Giống sầu riêng</p>
-                            <span id="modal-crop" class="inline-block px-2.5 py-1 bg-green-100 text-green-800 text-sm font-semibold rounded-md">...</span>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Số lượng cây</p>
-                            <p id="modal-quantity" class="text-gray-800 font-medium text-lg">...</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Tuổi cây trung bình</p>
-                            <p id="modal-age" class="text-gray-800 font-medium">...</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Hệ thống tưới</p>
-                            <p id="modal-water" class="text-gray-800 font-medium">...</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Ngày sinh chủ vườn</p>
-                            <p id="modal-dob" class="text-gray-800 font-medium">...</p>
-                        </div>
+            <!-- Cột phải: Thông tin chi tiết toàn diện -->
+            <div class="md:w-2/3 p-6 sm:p-8">
+                <div class="border-b border-gray-100 pb-4 mb-5">
+                    <h2 id="modal-name" class="text-2xl font-extrabold text-gray-900 mb-1">Tên khách hàng</h2>
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-gray-600">
+                        <span class="text-green-600 font-semibold flex items-center"><i class="fas fa-phone-alt mr-1.5"></i> <span id="modal-phone">SĐT</span></span>
+                        <span><i class="far fa-calendar-alt mr-1 text-gray-400"></i> Ngày sinh: <span id="modal-dob" class="text-gray-800">--</span></span>
                     </div>
                 </div>
+
+                <div class="space-y-5 text-sm">
+                    <!-- Địa chỉ -->
+                    <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-start">
+                        <i class="fas fa-map-marker-alt text-red-500 mt-1 mr-2.5"></i>
+                        <div>
+                            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Địa chỉ vườn</p>
+                            <p id="modal-address" class="text-gray-800 font-medium mt-0.5">...</p>
+                        </div>
+                    </div>
+
+                    <!-- Khu 1: Quy mô & Giống cây -->
+                    <div>
+                        <h4 class="text-xs font-bold text-green-700 uppercase tracking-wider mb-2.5 flex items-center"><i class="fas fa-tree mr-1.5"></i> Quy mô & Giống cây trồng</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-green-50/40 p-3 rounded-xl border border-green-100/60">
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Diện tích</span>
+                                <span id="modal-area" class="font-bold text-gray-800 text-base">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Số lượng</span>
+                                <span id="modal-quantity" class="font-bold text-green-700 text-base">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Giống sầu riêng</span>
+                                <span id="modal-crop" class="font-semibold text-gray-800">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Tuổi cây TB</span>
+                                <span id="modal-age" class="font-semibold text-gray-800">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Khu 2: Kỹ thuật nông nghiệp -->
+                    <div>
+                        <h4 class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2.5 flex items-center"><i class="fas fa-seedling mr-1.5"></i> Kỹ thuật & Phân bón</h4>
+                        <div class="grid grid-cols-2 gap-3 bg-gray-50 p-3.5 rounded-xl border border-gray-100">
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Hệ thống tưới</span>
+                                <span id="modal-water" class="font-semibold text-gray-800">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Nguồn tưới</span>
+                                <span id="modal-water-source" class="font-semibold text-gray-800">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Hình thức canh tác</span>
+                                <span id="modal-farming-method" class="inline-block mt-0.5 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Phân bón dùng chính</span>
+                                <span id="modal-fertilizer" class="font-semibold text-gray-800">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Khu 3: Kiểm nghiệm & Đầu ra -->
+                    <div>
+                        <h4 class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-2.5 flex items-center"><i class="fas fa-certificate mr-1.5"></i> Kiểm nghiệm & Thu mua</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-amber-50/40 p-3.5 rounded-xl border border-amber-100/60">
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Kiểm nghiệm Cadimi trước đây</span>
+                                <span id="modal-cadmium" class="font-semibold text-gray-800">--</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] text-gray-400 font-medium">Đơn vị thu mua/Xuất khẩu hiện tại</span>
+                                <span id="modal-buyer" class="font-semibold text-gray-800">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Thông báo Toast (Góc dưới) -->
+    <!-- Thông báo Toast -->
     <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-gray-800 text-white px-5 py-3 rounded-lg shadow-lg flex items-center gap-3 z-[60]">
         <i class="fas fa-check-circle text-green-400"></i>
         <span id="toast-message" class="text-sm font-medium">Thông báo</span>
     </div>
 
     <script>
-        // Các biến toàn cục
         let allCustomers = [];
         let qrcodeObj = null;
         let currentProfileLink = "";
         let currentQRName = "";
 
-        // Hàm xử lý dữ liệu trả về từ Google Sheets qua JSONP
+        // Trích xuất toàn bộ 15 cột dữ liệu từ Google Sheets
         function handleGoogleSheetResponse(response) {
             document.getElementById('loadingIndicator').classList.add('hidden');
             
@@ -199,28 +223,31 @@
                 const rows = response.table.rows;
                 allCustomers = [];
 
-                // Lặp qua từng dòng dữ liệu (bỏ qua dòng tiêu đề nếu có)
                 rows.forEach((row, index) => {
-                    if (row.c[1] && row.c[1].v) { // Kiểm tra cột Họ Tên (Cột B trong sheets, index 1) có tồn tại
+                    if (row.c[1] && row.c[1].v) { 
                         allCustomers.push({
-                            id: index, // Tạo ID dựa trên số thứ tự dòng
+                            id: index,
                             name: row.c[1]?.v || "Không rõ",           // Cột B: Họ tên
-                            dob: row.c[2]?.f || row.c[2]?.v || "--",   // Cột C: Ngày tháng năm sinh
-                            phone: row.c[3]?.v ? String(row.c[3].v).trim() : "", // Cột D: Số điện thoại
+                            dob: row.c[2]?.f || row.c[2]?.v || "--",   // Cột C: Ngày sinh
+                            phone: row.c[3]?.v ? String(row.c[3].v).trim() : "", // Cột D: SĐT
                             addressRes: row.c[4]?.v || "",             // Cột E: Địa chỉ thường trú
                             addressGar: row.c[5]?.v || "",             // Cột F: Địa chỉ vườn
-                            area: row.c[6]?.v || "",                   // Cột G: Diện tích
-                            quantity: row.c[7]?.v || "",               // Cột H: Số lượng
-                            crop: row.c[8]?.v || "",                   // Cột I: Giống
-                            age: row.c[9]?.v || "",                    // Cột J: Tuổi cây
-                            water: row.c[10]?.v || ""                  // Cột K: Hệ thống tưới
+                            area: row.c[6]?.v || "--",                 // Cột G: Diện tích
+                            quantity: row.c[7]?.v || "--",             // Cột H: Số lượng
+                            crop: row.c[8]?.v || "--",                 // Cột I: Giống
+                            age: row.c[9]?.v || "--",                  // Cột J: Tuổi cây
+                            water: row.c[10]?.v || "--",               // Cột K: Hệ thống tưới
+                            waterSource: row.c[11]?.v || "--",         // Cột L: Nguồn tưới (MỚI)
+                            farmingMethod: row.c[12]?.v || "--",       // Cột M: Hình thức canh tác (MỚI)
+                            cadmiumTest: row.c[13]?.v || "Chưa có",    // Cột N: Kiểm nghiệm Cadimi (MỚI)
+                            buyer: row.c[14]?.v || "Chưa có",          // Cột O: Đơn vị thu mua (MỚI)
+                            fertilizer: row.c[15]?.v || "--"           // Cột P: Phân bón chính (MỚI)
                         });
                     }
                 });
 
                 if (allCustomers.length > 0) {
                     renderCards(allCustomers);
-                    // KIỂM TRA LINK ĐỂ TỰ ĐỘNG MỞ HỒ SƠ (DEEP LINKING)
                     checkAndOpenDeepLink();
                 } else {
                     document.getElementById('noResult').classList.remove('hidden');
@@ -228,19 +255,14 @@
             } catch (error) {
                 console.error("Lỗi phân tích dữ liệu: ", error);
                 document.getElementById('noResult').classList.remove('hidden');
-                document.getElementById('noResult').innerHTML = `
-                    <div class="text-red-500 mb-2"><i class="fas fa-exclamation-triangle text-3xl"></i></div>
-                    <p>Có lỗi khi đọc dữ liệu từ Google Sheets.</p>
-                `;
             }
         }
 
-        // Tạo thẻ kịch bản (Script) để lấy dữ liệu dạng JSONP vượt tường lửa CORS
         const script = document.createElement('script');
         script.src = 'https://docs.google.com/spreadsheets/d/1nV3tvjWThiN0izaTuzNR19PRqu9qTjflEFggkYNDA18/gviz/tq?tqx=responseHandler:handleGoogleSheetResponse&headers=1';
         document.body.appendChild(script);
 
-        // Render danh sách thẻ khách hàng
+        // Hiển thị danh sách thẻ ngoài trang chủ
         function renderCards(data) {
             const grid = document.getElementById('customerGrid');
             grid.innerHTML = '';
@@ -262,31 +284,33 @@
                 
                 card.innerHTML = `
                     <div class="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
-                    <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-start justify-between mb-3">
                         <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-600 font-bold text-xl border border-green-100">
                             ${customer.name.charAt(0).toUpperCase()}
                         </div>
-                        ${customer.crop ? `<span class="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-md border border-green-100">${customer.crop}</span>` : ''}
+                        <div class="flex flex-col items-end gap-1">
+                            ${customer.crop !== '--' ? `<span class="px-2 py-0.5 bg-green-50 text-green-700 text-xs font-semibold rounded border border-green-100">${customer.crop}</span>` : ''}
+                            ${customer.farmingMethod !== '--' ? `<span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[11px] font-medium rounded border border-blue-100">${customer.farmingMethod}</span>` : ''}
+                        </div>
                     </div>
                     
                     <div class="flex-grow">
                         <h3 class="text-lg font-bold text-gray-900 mb-1 leading-tight">${customer.name}</h3>
-                        <p class="text-sm font-medium text-green-600 mb-3 flex items-center">
+                        <p class="text-sm font-medium text-green-600 mb-2.5 flex items-center">
                             <i class="fas fa-phone-alt w-4 text-center mr-1"></i> ${customer.phone || 'Chưa có SĐT'}
                         </p>
                         <p class="text-xs text-gray-500 line-clamp-2 flex items-start">
-                            <i class="fas fa-map-marker-alt w-4 text-center mr-1 mt-0.5"></i> 
+                            <i class="fas fa-map-marker-alt w-4 text-center mr-1 mt-0.5 text-red-400"></i> 
                             <span class="flex-1">${address}</span>
                         </p>
-                        ${customer.area || customer.quantity ? `
-                        <div class="mt-4 flex gap-3 text-xs text-gray-600 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
-                            ${customer.area ? `<div><span class="block text-[10px] text-gray-400 font-bold uppercase">Diện tích</span><span class="font-semibold text-gray-800">${customer.area}</span></div>` : ''}
-                            ${customer.quantity ? `<div><span class="block text-[10px] text-gray-400 font-bold uppercase">Số cây</span><span class="font-semibold text-gray-800">${customer.quantity} gốc</span></div>` : ''}
+                        
+                        <div class="mt-3.5 grid grid-cols-2 gap-2 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                            <div><span class="block text-[10px] text-gray-400 font-bold uppercase">Diện tích</span><span class="font-semibold text-gray-800">${customer.area}</span></div>
+                            <div><span class="block text-[10px] text-gray-400 font-bold uppercase">Số cây</span><span class="font-semibold text-green-700">${customer.quantity !== '--' ? customer.quantity + ' gốc' : '--'}</span></div>
                         </div>
-                        ` : ''}
                     </div>
 
-                    <button onclick="openModal(${customer.id})" class="mt-5 w-full py-2.5 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 group">
+                    <button onclick="openModal(${customer.id})" class="mt-4 w-full py-2.5 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center gap-2 group">
                         <i class="fas fa-qrcode text-green-600 group-hover:text-white transition-colors"></i> Xem chi tiết & QR
                     </button>
                 `;
@@ -294,42 +318,47 @@
             });
         }
 
-        // TỰ ĐỘNG KIỂM TRA TRA LIÊN KẾT ĐỂ MỞ HỒ SƠ (DEEP LINKING)
+        // Kiểm tra Deep Link để tự động mở thẻ
         function checkAndOpenDeepLink() {
             const urlParams = new URLSearchParams(window.location.search);
             const userParam = urlParams.get('user');
 
             if (userParam) {
-                // Tìm khách hàng có SĐT hoặc Tên khớp với trên link
                 const matchedCustomer = allCustomers.find(c => 
                     (c.phone && c.phone === userParam) || 
                     (c.name && c.name.toLowerCase() === decodeURIComponent(userParam).toLowerCase())
                 );
-
-                if (matchedCustomer) {
-                    openModal(matchedCustomer.id);
-                }
+                if (matchedCustomer) openModal(matchedCustomer.id);
             }
         }
 
-        // Mở Modal và tạo QR
+        // Đổ toàn bộ dữ liệu vào Modal
         function openModal(customerId) {
             const customer = allCustomers.find(c => c.id === customerId);
             if(!customer) return;
 
             document.getElementById('modal-name').innerText = customer.name;
             document.getElementById('modal-phone').innerText = customer.phone || 'Chưa có SĐT';
-            document.getElementById('modal-dob').innerText = customer.dob || '--';
-            document.getElementById('modal-area').innerText = customer.area || '--';
+            document.getElementById('modal-dob').innerText = customer.dob;
             document.getElementById('modal-address').innerText = customer.addressGar || customer.addressRes || 'Chưa cập nhật địa chỉ';
-            document.getElementById('modal-crop').innerText = customer.crop || '--';
-            document.getElementById('modal-quantity').innerText = (customer.quantity ? customer.quantity + ' gốc' : '--');
-            document.getElementById('modal-age').innerText = customer.age || '--';
-            document.getElementById('modal-water').innerText = customer.water || '--';
+            
+            // Khu 1: Quy mô & Giống
+            document.getElementById('modal-area').innerText = customer.area;
+            document.getElementById('modal-quantity').innerText = (customer.quantity !== '--' ? customer.quantity + ' gốc' : '--');
+            document.getElementById('modal-crop').innerText = customer.crop;
+            document.getElementById('modal-age').innerText = customer.age;
+
+            // Khu 2: Kỹ thuật & Phân bón (MỚI)
+            document.getElementById('modal-water').innerText = customer.water;
+            document.getElementById('modal-water-source').innerText = customer.waterSource;
+            document.getElementById('modal-farming-method').innerText = customer.farmingMethod;
+            document.getElementById('modal-fertilizer').innerText = customer.fertilizer;
+
+            // Khu 3: Kiểm nghiệm & Đầu ra (MỚI)
+            document.getElementById('modal-cadmium').innerText = customer.cadmiumTest;
+            document.getElementById('modal-buyer').innerText = customer.buyer;
 
             currentQRName = customer.name;
-
-            // ĐÃ SỬA LỖI: Xoá ký tự "[" bị thừa ở link Vercel
             const baseUrl = 'https://nhavuoncapy.vercel.app'; 
             const identifier = customer.phone || customer.name; 
             currentProfileLink = `${baseUrl}?user=${encodeURIComponent(identifier)}`;
@@ -347,16 +376,13 @@
                 correctLevel : QRCode.CorrectLevel.M 
             });
 
-            // Hiển thị modal
-            const modal = document.getElementById('detailModal');
-            modal.classList.remove('hidden');
+            document.getElementById('detailModal').classList.remove('hidden');
         }
 
         function closeModal() {
             document.getElementById('detailModal').classList.add('hidden');
         }
 
-        // Hàm Copy an toàn
         function copyProfileLink() {
             if(currentProfileLink) {
                 const tempInput = document.createElement("input");
@@ -365,12 +391,10 @@
                 tempInput.select();
                 document.execCommand("copy");
                 document.body.removeChild(tempInput);
-                
                 showToast("Đã chép link: " + currentProfileLink);
             }
         }
 
-        // Hàm tải QR code dạng hình ảnh
         function downloadQR() {
             const canvas = document.querySelector('#qrcode-container canvas');
             if (canvas) {
@@ -385,12 +409,10 @@
             }
         }
 
-        // Chức năng tìm kiếm
         function searchCustomer(isMobile = false) {
             const inputId = isMobile ? 'searchInputMobile' : 'searchInput';
             const keyword = document.getElementById(inputId).value.toLowerCase().trim();
             
-            // Đồng bộ 2 ô search
             if(isMobile) document.getElementById('searchInput').value = keyword;
             else document.getElementById('searchInputMobile').value = keyword;
 
@@ -398,20 +420,14 @@
                 return (customer.name && customer.name.toLowerCase().includes(keyword)) || 
                        (customer.phone && customer.phone.toLowerCase().includes(keyword));
             });
-
             renderCards(filteredData);
         }
 
-        // Hàm hiển thị Toast thông báo
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-message').innerText = message;
-            
             toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 3000);
         }
     </script>
 </body>
